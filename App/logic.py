@@ -27,6 +27,9 @@
 import os
 import csv
 import datetime
+from DataStructures.List import array_list as al
+from DataStructures.Map import linear_probing as lp
+from DataStructures.Tree import binary_search_tree as bst
 
 # TODO Realice la importación del Árbol Binario Ordenado
 # TODO Realice la importación de ArrayList (al) como estructura de datos auxiliar para sus requerimientos
@@ -167,24 +170,21 @@ def index_size(analyzer):
     """
     Numero de elementos en el indice
     """
-    # TODO Completar la función de consulta de tamaño del árbol
-    pass
+    return bst.size(analyzer['dateIndex'])
 
 
 def min_key(analyzer):
     """
     Llave mas pequena
     """
-    # TODO Completar la función de consulta de la llave mínima
-    pass
+    return bst.get_min(analyzer['dateIndex'])
 
 
 def max_key(analyzer):
     """
     Llave mas grande
     """
-    # TODO Completar la función de consulta de la llave máxima
-    pass
+    return bst.get_max(analyzer['dateIndex'])
 
 
 def get_crimes_by_range(analyzer, initialDate, finalDate):
@@ -192,7 +192,11 @@ def get_crimes_by_range(analyzer, initialDate, finalDate):
     Retorna el numero de crimenes en un rago de fechas.
     """
     # TODO Completar la función de consulta de crimenes por rango de fechas
-    pass
+    crimes_in_range = bst.values(analyzer['dateIndex'], initialDate, finalDate)
+    total_crimes = 0
+    for day_entry in crimes_in_range:
+        total_crimes += al.size(day_entry['lstcrimes'])
+    return total_crimes
 
 
 def get_crimes_by_range_code(analyzer, initialDate, offensecode):
