@@ -204,5 +204,16 @@ def get_crimes_by_range_code(analyzer, initialDate, offensecode):
     Para una fecha determinada, retorna el numero de crimenes
     de un tipo especifico.
     """
-    # TODO Completar la función de consulta de crimenes por tipo de crimen en una fecha
-    pass
+    date = datetime.datetime.strptime(initialDate, '%Y-%m-%d').date()
+    entry = bst.get(analyzer['dateIndex'], date)
+
+    if entry is None:
+        return 0
+
+    offenseIndex = entry['offenseIndex']
+    offentry = lp.get(offenseIndex, offensecode)
+
+    if offentry is None:
+        return 0
+
+    return al.size(offentry['lstoffenses'])
