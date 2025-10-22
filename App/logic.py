@@ -96,32 +96,28 @@ def update_date_index(map, crime):
     crimedate = datetime.datetime.strptime(occurreddate, '%Y-%m-%d %H:%M:%S')
     entry = bst.get(map, crimedate.date())
     if entry is None:
-        # TODO Realizar el caso en el que no se encuentra la fecha
-        pass
+        datentry = new_data_entry(crime)
+        bst.put(map, crimedate.date(), datentry)
     else:
         datentry = entry
     add_date_index(datentry, crime)
     return map
 
-
 def add_date_index(datentry, crime):
-    """
-    Actualiza un indice de tipo de crimenes.  Este indice tiene una lista
-    de crimenes y una tabla de hash cuya llave es el tipo de crimen y
-    el valor es una lista con los crimenes de dicho tipo en la fecha que
-    se está consultando (dada por el nodo del arbol)
-    """
+
     lst = datentry['lstcrimes']
     al.add_last(lst, crime)
     offenseIndex = datentry['offenseIndex']
     offentry = lp.get(offenseIndex, crime['OFFENSE_CODE_GROUP'])
     if (offentry is None):
-        # TODO Realice el caso en el que no se encuentre el tipo de crimen
-        pass
+        offentry = new_offense_entry(crime['OFFENSE_CODE_GROUP'], crime)
+        al.add_last(offentry['lstoffenses'], crime)
+        lp.put(offenseIndex, crime['OFFENSE_CODE_GROUP'], offentry)
     else:
-        # TODO Realice el caso en el que se encuentre el tipo de crimen
-        pass
+        al.add_last(offentry['lstoffenses'], crime)
+        lp.put(offenseIndex, crime['OFFENSE_CODE_GROUP'], offentry)
     return datentry
+
 
 
 def new_data_entry(crime):
@@ -160,11 +156,11 @@ def crimes_size(analyzer):
 
 
 def index_height(analyzer):
-    """
-    Altura del arbol
-    """
-    # TODO Completar la función de consulta de altura del árbol
-    pass
+   
+    if analyzer['dateIndex'] is None:
+        return 0
+    return bst.height(analyzer['dateIndex'])
+
 
 
 def index_size(analyzer):
